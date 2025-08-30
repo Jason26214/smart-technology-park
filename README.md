@@ -62,3 +62,5 @@ smart-technology-park/
 1. Build with `npm run build`
 2. Upload `dist/` folder to your server
 3. Configure Nginx (or other server) to point to `index.html`
+
+## Branch workflow test
