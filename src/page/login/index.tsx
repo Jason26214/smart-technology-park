@@ -1,10 +1,11 @@
+import "@ant-design/v5-patch-for-react-19";
 import "./index.scss";
 import bg from "../../assets/bg.jpg";
 import lgbg from "../../assets/lgbg.jpg";
 import logo from "../../assets/logo.png";
 import { Button, Form, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import http from "../../utils/http";
+import http from "../../utils/http/http";
 import { useEffect } from "react";
 
 export default function Login() {
@@ -21,7 +22,7 @@ export default function Login() {
       data: { username: "Jack", password: 123456 },
     })
       .then((res) => {
-        console.log("The request result is", res);
+        console.log("The response's data: ", res);
       })
       .catch((err) => {
         console.log("Error: ", err);
