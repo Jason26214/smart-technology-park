@@ -4,6 +4,8 @@ import lgbg from "../../assets/lgbg.jpg";
 import logo from "../../assets/logo.png";
 import { Button, Form, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import http from "../../utils/http";
+import { useEffect } from "react";
 
 export default function Login() {
   const [form] = Form.useForm();
@@ -11,6 +13,20 @@ export default function Login() {
   function handleLogin() {
     form.validateFields().then().catch();
   }
+
+  useEffect(() => {
+    http({
+      method: "post",
+      url: "/login",
+      data: { username: "Jack", password: 123456 },
+    })
+      .then((res) => {
+        console.log("The request result is", res);
+      })
+      .catch((err) => {
+        console.log("Error: ", err);
+      });
+  }, []);
 
   return (
     <div className="login" style={{ backgroundImage: `url(${bg})` }}>
