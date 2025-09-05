@@ -5,8 +5,8 @@ import lgbg from "../../assets/lgbg.jpg";
 import logo from "../../assets/logo.png";
 import { Button, Form, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import http from "../../utils/http/http";
 import { useEffect } from "react";
+import { login } from "../../api/users";
 
 export default function Login() {
   const [form] = Form.useForm();
@@ -16,17 +16,7 @@ export default function Login() {
   }
 
   useEffect(() => {
-    http({
-      method: "post",
-      url: "/login",
-      data: { username: "Jack", password: 123456 },
-    })
-      .then((res) => {
-        console.log("The response's data: ", res);
-      })
-      .catch((err) => {
-        console.log("Error: ", err);
-      });
+    login({ username: "Jack", password: "Abcd1234!" });
   }, []);
 
   return (
