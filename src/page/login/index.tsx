@@ -5,19 +5,23 @@ import lgbg from "../../assets/lgbg.jpg";
 import logo from "../../assets/logo.png";
 import { Button, Form, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
 import { login } from "../../api/users";
 
 export default function Login() {
   const [form] = Form.useForm();
 
   function handleLogin() {
-    form.validateFields().then().catch();
+    form
+      .validateFields()
+      .then(async (formData) => {
+        const {
+          data: { token },
+        } = await login(formData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
-
-  useEffect(() => {
-    login({ username: "Jack", password: "Abcd1234!" });
-  }, []);
 
   return (
     <div className="login" style={{ backgroundImage: `url(${bg})` }}>
@@ -38,7 +42,7 @@ export default function Login() {
               name="username"
               rules={[
                 { required: true, message: "Please input your username!" },
-                { min: 5, message: "Username must be at least 5 characters" },
+                { min: 4, message: "Username must be at least 4 characters" },
                 {
                   pattern: /^[a-zA-Z0-9_]+$/,
                   message: "Only letters, numbers, and underscores are allowed",
