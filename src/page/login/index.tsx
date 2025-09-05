@@ -6,9 +6,14 @@ import logo from "../../assets/logo.png";
 import { Button, Form, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { login } from "../../api/users";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../store/login/authSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function handleLogin() {
     form
@@ -17,6 +22,8 @@ export default function Login() {
         const {
           data: { token },
         } = await login(formData);
+        dispatch(setToken(token));
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);

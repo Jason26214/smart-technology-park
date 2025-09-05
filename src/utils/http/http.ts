@@ -5,6 +5,7 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from "axios";
+import { store } from "../../store";
 
 const http: AxiosInstance = axios.create({
   baseURL: "https://www.smartechpark.com",
@@ -12,7 +13,11 @@ const http: AxiosInstance = axios.create({
 
 // request interceptors
 http.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  console.log("interceptors request config(data): ", config.data);
+  //console.log("interceptors request config(data): ", config.data);
+  const { token } = store.getState().authSlice;
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
   return config;
 });
 
