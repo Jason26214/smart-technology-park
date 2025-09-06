@@ -9,9 +9,11 @@ import { login } from "../../api/users";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../store/login/authSlice";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Login() {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,13 +21,16 @@ export default function Login() {
     form
       .validateFields()
       .then(async (formData) => {
+        setLoading(true);
         const {
           data: { token },
         } = await login(formData);
+        setLoading(false);
         dispatch(setToken(token));
-        navigate("/");
+        navigate("/", { replace: true });
       })
       .catch((err) => {
+        setLoading(false);
         console.log(err);
       });
   }
@@ -87,6 +92,7 @@ export default function Login() {
                 type="primary"
                 style={{ width: "100%" }}
                 onClick={handleLogin}
+                loading={loading}
               >
                 Submit
               </Button>
