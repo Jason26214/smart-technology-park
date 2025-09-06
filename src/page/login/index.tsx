@@ -5,29 +5,35 @@ import lgbg from "../../assets/lgbg.jpg";
 import logo from "../../assets/logo.png";
 import { Button, Form, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import http from "../../utils/http/http";
-import { useEffect } from "react";
+import { login } from "../../api/users";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../store/login/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Login() {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function handleLogin() {
-    form.validateFields().then().catch();
-  }
-
-  useEffect(() => {
-    http({
-      method: "post",
-      url: "/login",
-      data: { username: "Jack", password: 123456 },
-    })
-      .then((res) => {
-        console.log("The response's data: ", res);
+    form
+      .validateFields()
+      .then(async (formData) => {
+        setLoading(true);
+        const {
+          data: { token },
+        } = await login(formData);
+        setLoading(false);
+        dispatch(setToken(token));
+        navigate("/", { replace: true });
       })
       .catch((err) => {
-        console.log("Error: ", err);
+        setLoading(false);
+        console.log(err);
       });
-  }, []);
+  }
 
   return (
     <div className="login" style={{ backgroundImage: `url(${bg})` }}>
@@ -48,7 +54,7 @@ export default function Login() {
               name="username"
               rules={[
                 { required: true, message: "Please input your username!" },
-                { min: 5, message: "Username must be at least 5 characters" },
+                { min: 4, message: "Username must be at least 4 characters" },
                 {
                   pattern: /^[a-zA-Z0-9_]+$/,
                   message: "Only letters, numbers, and underscores are allowed",
@@ -86,6 +92,7 @@ export default function Login() {
                 type="primary"
                 style={{ width: "100%" }}
                 onClick={handleLogin}
+                loading={loading}
               >
                 Submit
               </Button>
